@@ -1,3 +1,7 @@
+#info_bar {
+    flex: 1;
+}
+
 #info_bar > * {
     background-color: #222;
     padding: 2px;
@@ -21,5 +25,13 @@
         }
 
         border: solid 1px red;
+    }
+
+    &.help {
+        & > .iconify {
+            color: #06f;
+        }
+
+        border: solid 1px #06f;
     }
 }

@@ -10,7 +10,7 @@ pub fn CorsRequirement(cx: Scope) -> impl IntoView {
 
     view! { cx,
         <div class="cors-failure-popup" class="error" style=("display", visibility)>
-            <span class="iconify" data-icon="carbon:error"/>
+            <span class="iconify" data-icon="carbon:error"></span>
             <span>"CORS is enabled"</span>
         </div>
     }

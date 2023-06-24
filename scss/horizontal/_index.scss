@@ -1,18 +1,20 @@
 @use "info_bar";
+@use "account";
 
 #app_horizontal {
     flex-direction: row;
     height: 100%;
 }
 
-#channel_bar,
-#message_area,
-#info_bar {
-    flex: 1;
+.panel {
     background-color: #111;
     margin: 4px;
     border-radius: 4px;
     padding: 4px;
+}
+
+#channel_bar {
+    flex: 1;
 }
 
 #message_area {

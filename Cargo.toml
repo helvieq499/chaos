@@ -8,15 +8,20 @@ edition = "2021"
 [dependencies]
 console_error_panic_hook = "0.1.7"
 js-sys = "0.3"
-leptos = "0.3.1"
+leptos = "0.3"
 wasm-bindgen-futures = "0.4.37"
 
 [dependencies.futures-timer]
 version = "3.0.2"
 features = ["wasm-bindgen"]
 
+[dependencies.leptos_router]
+version = "0.3"
+features = ["csr"]
+
 [dependencies.web-sys]
 version = "0.3"
 features = [
-    "Window"
+    "Storage",
+    "Window",
 ]

@@ -3,7 +3,8 @@ use leptos::*;
 mod app;
 use app::*;
 
-mod components;
+mod global_context;
+mod panels;
 
 fn main() {
     std::panic::set_hook(Box::new(console_error_panic_hook::hook));
