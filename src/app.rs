@@ -6,6 +6,7 @@ use crate::panels::{AccountPanel, InfoBar};
 #[component]
 pub fn App(cx: Scope) -> impl IntoView {
     crate::global_context::setup(cx);
+    crate::logic::setup(cx);
 
     view! { cx,
         <Router>
