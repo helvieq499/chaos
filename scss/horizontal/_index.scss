@@ -1,0 +1,20 @@
+@use "info_bar";
+
+#app_horizontal {
+    flex-direction: row;
+    height: 100%;
+}
+
+#channel_bar,
+#message_area,
+#info_bar {
+    flex: 1;
+    background-color: #111;
+    margin: 4px;
+    border-radius: 4px;
+    padding: 4px;
+}
+
+#message_area {
+    flex: 2;
+}
