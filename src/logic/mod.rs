@@ -1,7 +1,9 @@
 use leptos::*;
 
+pub mod gateway_url;
 pub mod socket;
+pub mod discord;
 
 pub fn setup(cx: Scope) {
-    provide_context(cx, socket::Socket::new(cx));
+    socket::setup(cx);
 }

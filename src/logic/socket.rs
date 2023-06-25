@@ -1,86 +1,57 @@
-use js_sys::{JsString, Reflect};
 use leptos::*;
-use wasm_bindgen_futures::JsFuture;
+use wasm_sockets::{EventClient, Message};
 
-#[derive(Clone)]
-pub struct Socket {
-    app_scope: Scope,
-    gateway_url: Resource<(), Option<(bool, String)>>,
-}
+use super::discord::RecvEvent;
 
-impl Socket {
-    pub fn new(cx: Scope) -> Self {
-        let gateway_url = create_resource(cx, || (), |_| fetch_gateway_url());
+pub fn setup(cx: Scope) {
+    let socket = create_rw_signal::<Option<wasm_sockets::EventClient>>(cx, None);
+    provide_context(cx, socket);
 
-        create_effect(cx, move |_| {
-            gateway_url.with(cx, |res| {
-                if let Some((from_local, url)) = res {
-                    log::debug!(
-                        "Gateway URL: {}\nFetched from {} source",
-                        url,
-                        if *from_local { "local" } else { "remote" }
-                    );
-                } else {
-                    log::error!("Failed to fetch gateway URL");
-                }
-            })
-        });
+    let gateway_url = super::gateway_url::resource(cx);
 
-        Self {
-            app_scope: cx,
-            gateway_url,
-        }
-    }
-}
+    create_effect(cx, move |_| {
+        gateway_url.with(cx, |res| {
+            if let Some((from_local, url)) = res {
+                log::debug!(
+                    "Gateway URL: {}\nFetched from {} source",
+                    url,
+                    if *from_local { "local" } else { "remote" }
+                );
 
-async fn fetch_gateway_url() -> Option<(bool, String)> {
-    if let Some(url) = read_gateway_local() {
-        Some((true, url))
-    } else {
-        if let Some(window) = web_sys::window() {
-            if let Ok(request) = wasm_bindgen_futures::JsFuture::from(
-                window.fetch_with_str("https://discord.com/api/v10/gateway"),
-            )
-            .await
-            {
-                let request = web_sys::Request::from(request);
-                if let Ok(json_promise) = request.json() {
-                    let json = wasm_bindgen_futures::JsFuture::from(json_promise).await;
-                    if let Some(url) = json
-                        .ok()
-                        .map(|json| {
-                            js_sys::Reflect::get(&json, &js_sys::JsString::from("url"))
-                                .map(|obj| js_sys::JsString::from(obj).as_string())
-                                .ok()
-                                .flatten()
-                        })
-                        .flatten()
-                    {
-                        crate::utils::local_storage::get()
-                            .map(|local_storage| local_storage.set("gateway_url", &url));
-
-                        Some((false, url.to_string()))
-                    } else {
-                        log::error!("Failed to get URL");
-                        None
-                    }
-                } else {
-                    log::error!("Failed to parse JSON from response");
-                    None
+                if let Ok(mut client) = EventClient::new(url) {
+                    client.set_on_connection(Some(Box::new(on_connection)));
+                    client.set_on_message(Some(Box::new(on_message)));
+                    client.set_on_close(Some(Box::new(on_close)));
+                    client.set_on_error(Some(Box::new(on_error)));
+                    socket.set(Some(client));
                 }
             } else {
-                log::error!("Network error while fetching gateway address");
-                None
+                log::error!("Failed to fetch gateway URL");
             }
-        } else {
-            log::info!("window was none");
-            None
+        })
+    });
+}
+
+fn on_connection(_this: &EventClient) {
+    log::info!("Connected to socket");
+}
+
+fn on_message(_this: &EventClient, msg: Message) {
+    if let Message::Text(ref text) = msg {
+        if let Ok(json) = json::parse(&text) {
+            if let Ok(event) = RecvEvent::try_from(json) {
+                log::debug!("{:?}", event);
+            }
         }
+    } else {
+        log::warn!("Socket received an unknown binary message");
     }
 }
 
-fn read_gateway_local() -> Option<String> {
-    crate::utils::local_storage::get()
-        .map(|local_storage| local_storage.get("gateway_url").ok().flatten())
-        .flatten()
+fn on_close(close: web_sys::CloseEvent) {
+    log::warn!("Socket closed gracefully\n{:?}", close);
+}
+
+fn on_error(error: web_sys::ErrorEvent) {
+    log::warn!("Socket closed with an error\n{:?}", error);
 }
