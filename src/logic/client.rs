@@ -1,19 +1,18 @@
 use leptos::*;
-use std::cell::RefCell;
+use std::{rc::Rc, sync::RwLock};
 
-#[derive(Clone)]
 pub struct Client {
-    pub sequence: RefCell<Option<i32>>,
+    pub sequence: RwLock<Option<i32>>,
 }
 
 impl Client {
     fn new() -> Self {
         Self {
-            sequence: RefCell::new(None),
+            sequence: RwLock::new(None),
         }
     }
 }
 
 pub fn setup(cx: Scope) {
-    provide_context(cx, Client::new());
+    provide_context(cx, Rc::new(Client::new()));
 }
