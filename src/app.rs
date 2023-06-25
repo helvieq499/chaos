@@ -1,7 +1,7 @@
 use leptos::*;
 use leptos_router::*;
 
-use crate::panels::{AccountPanel, InfoBar};
+use crate::panels::{AccountPanel, InfoBar, TitleBar};
 
 #[component]
 pub fn App(cx: Scope) -> impl IntoView {
@@ -11,7 +11,7 @@ pub fn App(cx: Scope) -> impl IntoView {
     view! { cx,
         <Router>
             <div id="app_vertical" class="flex">
-                <div id="title_bar"></div>
+                <TitleBar/>
                 <div id="app_horizontal" class="flex">
                     <Routes>
                         <Route

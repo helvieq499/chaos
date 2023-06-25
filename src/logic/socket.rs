@@ -5,35 +5,43 @@ use wasm_sockets::{EventClient, Message};
 
 pub fn setup(cx: Scope) {
     let client = use_context::<Rc<super::Client>>(cx).expect("to be provided");
-
-    let socket_signal = create_rw_signal(cx, None);
-    provide_context(cx, socket_signal);
-
     let gateway_url = super::gateway_url::resource(cx);
-    create_effect(cx, move |_| {
-        let client = client.clone();
-        gateway_url.with(cx, move |res| {
-            if let Some((from_local, url)) = res {
-                log::debug!(
-                    "Gateway URL: {url}\nFetched from {} source",
-                    if *from_local { "local" } else { "remote" }
-                );
 
-                if let Ok(mut socket) = EventClient::new(url) {
-                    socket.set_on_connection(Some(Box::new(on_connection)));
-                    socket.set_on_message(Some(Box::new(move |socket, message| {
-                        on_message(client.clone(), socket, message, cx);
-                    })));
-                    socket.set_on_close(Some(Box::new(on_close)));
-                    socket.set_on_error(Some(Box::new(on_error)));
+    let connect = client.connect;
 
-                    socket_signal.set(Some(Rc::new(socket)));
+    let socket = create_local_resource(
+        cx,
+        move || (connect.get(), gateway_url.read(cx).flatten()),
+        move |params| {
+            let client = client.clone();
+            async move {
+                match params {
+                    (true, Some((from_local, url))) => {
+                        log::debug!(
+                            "Gateway URL: {url}\nFetched from {} source",
+                            if from_local { "local" } else { "remote" }
+                        );
+
+                        EventClient::new(&url).map_or(None, |mut socket| {
+                            socket.set_on_connection(Some(Box::new(on_connection)));
+                            socket.set_on_message(Some(Box::new(move |socket, message| {
+                                on_message(client.clone(), socket, message, cx);
+                            })));
+                            socket.set_on_close(Some(Box::new(on_close)));
+                            socket.set_on_error(Some(Box::new(on_error)));
+
+                            Some(Rc::new(socket))
+                        })
+                    }
+                    _ => None,
                 }
-            } else {
-                log::error!("Failed to fetch gateway URL");
             }
-        })
-    });
+        },
+    );
+
+    let (socket_signal, set_socket_signal) = create_signal(cx, None);
+    create_effect(cx, move |_| set_socket_signal(socket.read(cx).flatten()));
+    provide_context(cx, socket_signal);
 }
 
 fn on_connection(_socket: &EventClient) {

@@ -1,4 +1,5 @@
 use leptos::*;
+use wasm_sockets::EventClient;
 use std::rc::Rc;
 
 pub fn hello(
@@ -9,8 +10,8 @@ pub fn hello(
     if let Some(heartbeat_interval) = event.data["heartbeat_interval"].as_u64() {
         log::debug!("Sending heartbeat every {heartbeat_interval} ms");
 
-        let socket = use_context::<RwSignal<Option<Rc<wasm_sockets::EventClient>>>>(cx)
-            .expect("to be provided");
+        let socket =
+            use_context::<ReadSignal<Option<Rc<EventClient>>>>(cx).expect("to be provided");
 
         leptos::spawn_local(async move {
             let duration = std::time::Duration::from_millis(heartbeat_interval);
