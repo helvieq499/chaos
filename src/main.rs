@@ -1,3 +1,11 @@
+#![warn(clippy::nursery, clippy::pedantic, clippy::unwrap_used)]
+#![allow(
+    clippy::future_not_send,
+    clippy::module_name_repetitions,
+    clippy::needless_pass_by_value,
+    clippy::wildcard_imports
+)]
+
 use leptos::*;
 
 mod app;
@@ -20,5 +28,5 @@ fn main() {
         .message_on_new_line(),
     );
 
-    mount_to_body(|cx| view! { cx, <App/> })
+    mount_to_body(|cx| view! { cx, <App/> });
 }

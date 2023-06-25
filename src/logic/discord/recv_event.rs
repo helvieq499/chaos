@@ -13,7 +13,7 @@ pub struct RecvEvent {
 }
 
 impl RecvEvent {
-    pub fn new(opcode: i32, data: serde_json::Value) -> Self {
+    pub const fn new(opcode: i32, data: serde_json::Value) -> Self {
         Self {
             opcode,
             data,

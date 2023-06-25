@@ -9,7 +9,8 @@ pub fn hello(
     if let Some(heartbeat_interval) = event.data["heartbeat_interval"].as_u64() {
         log::debug!("Sending heartbeat every {heartbeat_interval} ms");
 
-        let socket = use_context::<RwSignal<Option<Rc<wasm_sockets::EventClient>>>>(cx).unwrap();
+        let socket = use_context::<RwSignal<Option<Rc<wasm_sockets::EventClient>>>>(cx)
+            .expect("to be provided");
 
         leptos::spawn_local(async move {
             let duration = std::time::Duration::from_millis(heartbeat_interval);
@@ -17,11 +18,10 @@ pub fn hello(
             loop {
                 futures_timer::Delay::new(duration).await;
 
-                let seq = *client.sequence.read().unwrap();
-                let val = match seq {
-                    Some(x) => serde_json::Value::Number(x.into()),
-                    None => serde_json::Value::Null,
-                };
+                let seq = *client.sequence.read().expect("not poisoned");
+                let val = seq.map_or(serde_json::Value::Null, |x| {
+                    serde_json::Value::Number(x.into())
+                });
 
                 if let Ok(payload) =
                     serde_json::to_string(&crate::logic::discord::RecvEvent::new(1, val))

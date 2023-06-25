@@ -6,7 +6,7 @@ pub struct Client {
 }
 
 impl Client {
-    fn new() -> Self {
+    const fn new() -> Self {
         Self {
             sequence: RwLock::new(None),
         }

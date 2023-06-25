@@ -4,7 +4,7 @@ use leptos::*;
 use wasm_sockets::{EventClient, Message};
 
 pub fn setup(cx: Scope) {
-    let client = use_context::<Rc<super::Client>>(cx).unwrap();
+    let client = use_context::<Rc<super::Client>>(cx).expect("to be provided");
 
     let socket_signal = create_rw_signal(cx, None);
     provide_context(cx, socket_signal);
@@ -22,7 +22,7 @@ pub fn setup(cx: Scope) {
                 if let Ok(mut socket) = EventClient::new(url) {
                     socket.set_on_connection(Some(Box::new(on_connection)));
                     socket.set_on_message(Some(Box::new(move |socket, message| {
-                        on_message(client.clone(), socket, message, cx)
+                        on_message(client.clone(), socket, message, cx);
                     })));
                     socket.set_on_close(Some(Box::new(on_close)));
                     socket.set_on_error(Some(Box::new(on_error)));

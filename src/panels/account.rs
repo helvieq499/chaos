@@ -5,17 +5,16 @@ pub struct Reload;
 
 #[component]
 pub fn AccountPanel(cx: Scope) -> impl IntoView {
-    let reload = use_context::<RwSignal<Reload>>(cx).unwrap();
+    let reload = use_context::<RwSignal<Reload>>(cx).expect("to be provided");
     let token_elem: NodeRef<Input> = create_node_ref(cx);
     let login = move |_| {
-        web_sys::window()
-            .unwrap()
-            .local_storage()
-            .unwrap()
-            .unwrap()
-            .set("token", &token_elem().unwrap().value())
-            .unwrap();
-        reload.set(Reload);
+        if let Some(local_storage) = crate::utils::local_storage::get() {
+            local_storage
+                .set("token", &token_elem().expect("element exists").value())
+                .expect("saved to local storage");
+
+            reload.set(Reload);
+        }
     };
 
     view! { cx,
