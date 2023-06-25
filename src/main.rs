@@ -14,6 +14,7 @@ use app::*;
 mod bindings;
 mod logic;
 mod panels;
+mod routes;
 mod utils;
 
 fn main() {

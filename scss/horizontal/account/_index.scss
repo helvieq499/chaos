@@ -1,0 +1,26 @@
+#account-panel {
+    flex: 3;
+}
+
+#account-panel-login-options {
+    margin: 4px;
+    background-color: #222;
+    width: auto;
+    justify-content: space-evenly;
+    padding: 4px;
+
+    &>* {
+        flex: auto;
+        font-size: 32px;
+        text-align: center;
+
+        &[aria-current="page"] {
+            background-color: #333;
+        }
+
+        &:active, &:hover, &:link, &:visited {
+            text-decoration: none;
+            color: white;
+        }
+    }
+}
