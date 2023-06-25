@@ -3,6 +3,7 @@ use leptos_router::*;
 
 #[component]
 pub fn LoginCheck(cx: Scope) -> impl IntoView {
+    let client = crate::logic::Client::get(cx);
     let notif = create_node_ref::<Div>(cx);
     let reload =
         use_context::<RwSignal<crate::panels::account::Reload>>(cx).expect("to be provided");
@@ -11,11 +12,8 @@ pub fn LoginCheck(cx: Scope) -> impl IntoView {
         reload.get();
 
         if let Some(elem) = notif.get() {
-            if let Some(local_storage) = crate::utils::local_storage::get() {
-                let token_exists = local_storage.get("token").ok().flatten().is_some();
-
-                elem.style("display", if token_exists { "none" } else { "" });
-            }
+            let token_exists = client.credentials.with(Option::is_some);
+            elem.style("display", if token_exists { "none" } else { "" });
         }
     });
 

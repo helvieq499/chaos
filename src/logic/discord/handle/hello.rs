@@ -1,6 +1,6 @@
 use leptos::*;
-use wasm_sockets::EventClient;
 use std::rc::Rc;
+use wasm_sockets::EventClient;
 
 pub fn hello(
     client: Rc<crate::logic::Client>,

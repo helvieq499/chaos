@@ -1,12 +1,8 @@
-use std::rc::Rc;
-
 use leptos::*;
-
-use crate::logic::Client;
 
 #[component]
 pub fn TitleBar(cx: Scope) -> impl IntoView {
-    let client = use_context::<Rc<Client>>(cx).expect("to be provided");
+    let client = crate::logic::Client::get(cx);
 
     let connect = move |_| client.connect.set(true);
 

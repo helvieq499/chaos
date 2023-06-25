@@ -1,9 +1,13 @@
 use leptos::*;
 use std::{rc::Rc, sync::RwLock};
 
+pub mod credentials;
+
 pub struct Client {
     pub connect: RwSignal<bool>,
     pub sequence: RwLock<Option<i32>>,
+
+    pub credentials: RwSignal<Option<credentials::Credentials>>,
 }
 
 impl Client {
@@ -11,7 +15,13 @@ impl Client {
         Self {
             connect: create_rw_signal(cx, false),
             sequence: RwLock::new(None),
+
+            credentials: create_rw_signal(cx, None),
         }
+    }
+
+    pub fn get(cx: Scope) -> Rc<Self> {
+        use_context(cx).expect("to be provided")
     }
 }
 

@@ -4,7 +4,7 @@ use leptos::*;
 use wasm_sockets::{EventClient, Message};
 
 pub fn setup(cx: Scope) {
-    let client = use_context::<Rc<super::Client>>(cx).expect("to be provided");
+    let client = super::Client::get(cx);
     let gateway_url = super::gateway_url::resource(cx);
 
     let connect = client.connect;
