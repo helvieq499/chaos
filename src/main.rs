@@ -3,7 +3,7 @@ use leptos::*;
 mod app;
 use app::*;
 
-mod global_context;
+mod bindings;
 mod logic;
 mod panels;
 mod utils;
