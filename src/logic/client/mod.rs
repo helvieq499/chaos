@@ -13,7 +13,7 @@ pub struct Client {
 
     pub credentials: RwSignal<Option<Credentials>>,
     /// Do not hold onto a lock for longer than needed, clone anything needed
-    pub state: RwSignal<Option<RwLock<ClientState>>>
+    pub state: RwSignal<Option<RwLock<ClientState>>>,
 }
 
 impl Client {

@@ -1,5 +1,13 @@
 #account-panel {
     flex: 3;
+
+    & #warning-user-account {
+        border: solid orange;
+        border-radius: 4px;
+        margin: 4px;
+        width: auto;
+        text-align: center;
+    }
 }
 
 #account-panel-login-options {
@@ -12,6 +20,7 @@
         flex: auto;
         font-size: 32px;
         text-align: center;
+        user-select: none;
 
         &[aria-current="page"] {
             background-color: #333;

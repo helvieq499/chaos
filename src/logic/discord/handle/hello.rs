@@ -18,20 +18,22 @@ pub fn hello(client: Rc<Client>, event: crate::logic::discord::RecvEvent, cx: Sc
             if let Some(creds) = creds {
                 socket.with_untracked(|socket| {
                     if let Some(socket) = socket {
-                        let data = match creds.is_bot {
-                            true => bot_identify(creds),
-                            false => user_identify(creds),
+                        let data = if creds.is_bot {
+                            bot_identify(creds)
+                        } else {
+                            user_identify(creds)
                         };
 
-                        if let Ok(packet) = serde_json::to_string(&RecvEvent::new(2, data)) {
-                            if socket.send_string(&packet).is_err() {
-                                log::error!("Failed to send identify packet");
-                            }
-                        } else {
-                            log::error!("Failed to serialize identify packet");
-                        }
+                        serde_json::to_string(&RecvEvent::new(2, data)).map_or_else(
+                            |_| log::error!("Failed to serialize identify packet"),
+                            |packet| {
+                                if socket.send_string(&packet).is_err() {
+                                    log::error!("Failed to send identify packet");
+                                }
+                            },
+                        );
                     }
-                })
+                });
             }
         });
     }
@@ -78,7 +80,7 @@ fn bot_identify(creds: &Credentials) -> serde_json::Value {
             "device": "discord.py",
         },
         "compress": false,
-        "intents": 0b1100010111111011111101,
+        "intents": 0b11_0001_0111_1110_1111_1101,
     })
 }
 
@@ -106,7 +108,7 @@ fn user_identify(creds: &Credentials) -> serde_json::Value {
             "browser": "Chrome",
             "browser_user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
             "browser_version": "114.0.0.0",
-            "client_build_number": 208319,
+            "client_build_number": 208_319,
             "client_event_source": serde_json::Value::Null,
             "device": "",
             "os": "Windows",
