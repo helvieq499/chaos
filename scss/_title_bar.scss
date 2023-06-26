@@ -1,0 +1,27 @@
+#title_bar {
+    display: flex;
+    justify-content: left;
+    background-color: #111;
+    height: 32px;
+    line-height: 32px;
+    margin-bottom: 4px;
+    border-bottom: solid 1px red;
+
+    &>* {
+        // fix button
+        all: unset;
+
+        background-color: #222;
+        height: auto;
+        color: white;
+        font-size: 22px;
+        text-decoration: none;
+        padding: 0px 4px;
+        user-select: none;
+        cursor: pointer;
+
+        &+* {
+            border-left: solid 1px var(--primary);
+        }
+    }
+}

@@ -1,15 +1,18 @@
+@use "title_bar";
 @use "horizontal";
 
 :root {
     --primary: red;
 }
 
-html, body {
+html,
+body {
     height: 100%;
 }
 
 body {
     background-color: black;
+    font-family: 'Noto Sans', sans-serif;
     color: white;
     margin: 0;
 }
@@ -25,11 +28,4 @@ a {
 #app_vertical {
     flex-direction: column;
     height: 100%;
-}
-
-#title_bar {
-    height: 32px;
-    background-color: #111;
-    margin-bottom: 4px;
-    border-bottom: solid 1px red;
 }

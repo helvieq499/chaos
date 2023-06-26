@@ -3,11 +3,10 @@
 }
 
 #account-panel-login-options {
-    margin: 4px;
     background-color: #222;
     width: auto;
     justify-content: space-evenly;
-    padding: 4px;
+    padding: 2px;
 
     &>* {
         flex: auto;
@@ -18,7 +17,10 @@
             background-color: #333;
         }
 
-        &:active, &:hover, &:link, &:visited {
+        &:active,
+        &:hover,
+        &:link,
+        &:visited {
             text-decoration: none;
             color: white;
         }

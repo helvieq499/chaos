@@ -1,4 +1,4 @@
-use leptos::{*, html::Input};
+use leptos::{html::Input, *};
 
 #[component]
 pub fn AccountTokenLogin(cx: Scope) -> impl IntoView {
