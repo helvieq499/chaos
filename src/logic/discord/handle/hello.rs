@@ -1,43 +1,123 @@
 use leptos::*;
 use std::rc::Rc;
-use wasm_sockets::EventClient;
+use wasm_sockets::ConnectionStatus;
 
-pub fn hello(
-    client: Rc<crate::logic::Client>,
-    event: &crate::logic::discord::RecvEvent,
-    cx: Scope,
-) {
+use crate::logic::{
+    client::credentials::Credentials, discord::RecvEvent, socket::SocketType, Client,
+};
+
+pub fn hello(client: Rc<Client>, event: crate::logic::discord::RecvEvent, cx: Scope) {
     if let Some(heartbeat_interval) = event.data["heartbeat_interval"].as_u64() {
         log::debug!("Sending heartbeat every {heartbeat_interval} ms");
 
-        let socket =
-            use_context::<ReadSignal<Option<Rc<EventClient>>>>(cx).expect("to be provided");
+        let socket = use_context::<SocketType>(cx).expect("to be provided");
 
-        leptos::spawn_local(async move {
-            let duration = std::time::Duration::from_millis(heartbeat_interval);
+        start_heartbeat_interval(client.clone(), socket, heartbeat_interval);
 
-            loop {
-                futures_timer::Delay::new(duration).await;
+        client.credentials.with_untracked(move |creds| {
+            if let Some(creds) = creds {
+                socket.with_untracked(|socket| {
+                    if let Some(socket) = socket {
+                        let data = match creds.is_bot {
+                            true => bot_identify(creds),
+                            false => user_identify(creds),
+                        };
 
-                let seq = *client.sequence.read().expect("not poisoned");
-                let val = seq.map_or(serde_json::Value::Null, |x| {
-                    serde_json::Value::Number(x.into())
-                });
-
-                if let Ok(payload) =
-                    serde_json::to_string(&crate::logic::discord::RecvEvent::new(1, val))
-                {
-                    socket.with_untracked(|socket| {
-                        if let Some(socket) = socket {
-                            if socket.send_string(&payload).is_err() {
-                                log::warn!("Failed to send heartbeat");
-                            } else {
-                                log::trace!("Sending heartbeat");
+                        if let Ok(packet) = serde_json::to_string(&RecvEvent::new(2, data)) {
+                            if socket.send_string(&packet).is_err() {
+                                log::error!("Failed to send identify packet");
                             }
+                        } else {
+                            log::error!("Failed to serialize identify packet");
                         }
-                    });
-                }
+                    }
+                })
             }
         });
     }
+}
+
+fn start_heartbeat_interval(client: Rc<Client>, socket: SocketType, interval: u64) {
+    leptos::spawn_local(async move {
+        let duration = std::time::Duration::from_millis(interval);
+
+        loop {
+            if let Ok(payload) = serde_json::to_string(&RecvEvent::new(
+                1,
+                (*client.sequence.read().expect("not poisoned"))
+                    .map_or(serde_json::Value::Null, |x| {
+                        serde_json::Value::Number(x.into())
+                    }),
+            )) {
+                if let Some(socket) = socket.get_untracked() {
+                    if *socket.status.borrow() != ConnectionStatus::Connected {
+                        return;
+                    }
+
+                    if socket.send_string(&payload).is_err() {
+                        log::warn!("Failed to send heartbeat");
+                    } else {
+                        log::trace!("Sending heartbeat");
+                    }
+                } else {
+                    return;
+                }
+            }
+
+            futures_timer::Delay::new(duration).await;
+        }
+    });
+}
+
+fn bot_identify(creds: &Credentials) -> serde_json::Value {
+    serde_json::json!({
+        "token": creds.token,
+        "properties": {
+            "os": "Windows",
+            "browser": "discord.py",
+            "device": "discord.py",
+        },
+        "compress": false,
+        "intents": 0b1100010111111011111101,
+    })
+}
+
+// it would be better for everyone if these were documented
+fn user_identify(creds: &Credentials) -> serde_json::Value {
+    serde_json::json!({
+        "capabilities": 8189,
+        "client_state": {
+            "api_code_version": 0,
+            "guild_versions": {},
+            "highest_last_message_id": "0",
+            "private_channels_version": "0",
+            "read_state_version": 0,
+            "user_guild_settings_version": -1,
+            "user_settings_version": -1,
+        },
+        "compress": false,
+        "presence": {
+            "activities": [],
+            "afk": false,
+            "since": 0,
+            "status": "unknown",
+        },
+        "properties": {
+            "browser": "Chrome",
+            "browser_user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
+            "browser_version": "114.0.0.0",
+            "client_build_number": 208319,
+            "client_event_source": serde_json::Value::Null,
+            "device": "",
+            "os": "Windows",
+            "os_version": "10",
+            "referrer": "",
+            "referrer_current": "",
+            "referring_domain": "",
+            "referring_domain_current": "",
+            "release_channel": "stable",
+            "system_locale": "en-US",
+        },
+        "token": creds.token
+    })
 }

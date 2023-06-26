@@ -3,6 +3,8 @@ use std::rc::Rc;
 use leptos::*;
 use wasm_sockets::{EventClient, Message};
 
+pub type SocketType = ReadSignal<Option<Rc<EventClient>>>;
+
 pub fn setup(cx: Scope) {
     let client = super::Client::get(cx);
     let gateway_url = super::gateway_url::resource(cx);
@@ -17,6 +19,8 @@ pub fn setup(cx: Scope) {
             async move {
                 match params {
                     (true, Some((from_local, url))) => {
+                        let url = format!("{}/?encoding=json&v=10", url);
+
                         log::debug!(
                             "Gateway URL: {url}\nFetched from {} source",
                             if from_local { "local" } else { "remote" }
@@ -41,7 +45,7 @@ pub fn setup(cx: Scope) {
 
     let (socket_signal, set_socket_signal) = create_signal(cx, None);
     create_effect(cx, move |_| set_socket_signal(socket.read(cx).flatten()));
-    provide_context(cx, socket_signal);
+    provide_context::<SocketType>(cx, socket_signal);
 }
 
 fn on_connection(_socket: &EventClient) {
@@ -54,8 +58,8 @@ fn on_message(client: Rc<super::Client>, _socket: &EventClient, msg: Message, cx
             log::trace!("{:?}", event);
 
             match event.opcode {
-                0 => super::discord::handle::dispatch(client, &event),
-                10 => super::discord::handle::hello(client, &event, cx),
+                0 => super::discord::handle::dispatch(client, event),
+                10 => super::discord::handle::hello(client, event, cx),
                 11 => (), // heartbeat acknowledge
                 x => log::warn!("Unknown opcode {x}"),
             }
