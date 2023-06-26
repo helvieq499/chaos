@@ -5,6 +5,13 @@ pub enum Guild {
 }
 
 impl Guild {
+    pub fn key_str(&self) -> String {
+        match self {
+            Self::Unavailable(x) => x.id.clone(),
+            Self::Available(x) => x.id.clone(),
+        }
+    }
+
     pub fn key(&self) -> u64 {
         match self {
             Self::Unavailable(x) => &x.id,
@@ -38,4 +45,5 @@ pub struct UnavailableGuild {
 pub struct AvailableGuild {
     pub id: String,
     pub name: String,
+    pub icon: Option<String>,
 }

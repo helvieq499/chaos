@@ -1,0 +1,42 @@
+#guild_list {
+    flex: 4;
+
+}
+
+#guild_list_container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    justify-content: space-evenly;
+    box-sizing: border-box;
+    height: calc(100% - 8px);
+    overflow-y: auto;
+
+    &>* {
+        position: relative;
+        flex: 0 1 256px;
+        height: 256px;
+        border-radius: 4px;
+        text-decoration: none;
+        
+        &>*{
+            height: 100%;
+            padding: 4px;
+            background-color: #222;
+            background-repeat: no-repeat;
+            background-size: cover;
+
+            &>* {
+                color: white;
+                background-color: #222;
+                user-select: none;
+                pointer-events: none;
+            }
+
+            & > .guild_id {
+                position: absolute;
+                bottom: 0px;
+            }
+        }
+    }
+}
