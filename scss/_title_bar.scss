@@ -20,6 +20,10 @@
         user-select: none;
         cursor: pointer;
 
+        &[aria-current="page"] {
+            background-color: var(--primary);
+        }
+
         &+* {
             border-left: solid 1px var(--primary);
         }
