@@ -17,7 +17,7 @@ pub struct Client {
     pub credentials: RwSignal<Option<Credentials>>,
 
     pub initial_state: RwSignal<Option<RwLock<ClientState>>>,
-    pub guilds: RwSignal<RwLock<HashMap<u64, Guild>>>,
+    pub guilds: RwSignal<RwLock<HashMap<u64, Rc<Guild>>>>,
 }
 
 impl Client {

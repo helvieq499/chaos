@@ -1,3 +1,5 @@
+use std::rc::Rc;
+
 use leptos::*;
 use leptos_router::*;
 
@@ -15,7 +17,7 @@ pub fn GuildList(cx: Scope) -> impl IntoView {
                 .expect("unpoisoned")
                 .values()
                 .map(|guild| guild.clone())
-                .collect::<Vec<Guild>>()
+                .collect::<Vec<Rc<Guild>>>()
         })
     };
 
@@ -37,7 +39,7 @@ pub fn GuildList(cx: Scope) -> impl IntoView {
                             view=move |cx, guild| view! { cx,
                                 <A href={format!("/guilds/{}", guild.key_str())}>
                                     {
-                                        match guild {
+                                        match guild.as_ref() {
                                             Guild::Unavailable(guild) => {
                                                 view! { cx,
                                                     <div>

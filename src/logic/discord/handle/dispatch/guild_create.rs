@@ -20,7 +20,7 @@ pub fn on_event(client: Rc<Client>, event: RecvEvent) {
         |guild| {
             client.guilds.update(|guilds| {
                 let mut write_lock = guilds.write().expect("not poisoned");
-                write_lock.insert(guild.key(), guild);
+                write_lock.insert(guild.key(), Rc::new(guild));
             });
         },
     );

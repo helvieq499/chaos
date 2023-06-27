@@ -16,7 +16,7 @@ pub fn on_event(client: Rc<Client>, event: RecvEvent) {
 
                 for guild in &state.partial_guilds {
                     let guild: Guild = guild.clone().into();
-                    write_lock.insert(guild.key(), guild);
+                    write_lock.insert(guild.key(), Rc::new(guild));
                 }
             });
         }
