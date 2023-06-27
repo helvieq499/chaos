@@ -1,10 +1,13 @@
 use leptos::*;
 use leptos_router::*;
 
-use crate::panels::account::{
-    info::AccountInfo,
-    login::{AccountLogin, AccountTokenLogin},
-    AccountPanel,
+use crate::panels::{
+    account::{
+        info::AccountInfo,
+        login::{AccountLogin, AccountTokenLogin},
+        AccountPanel,
+    },
+    infobar::InfoBar,
 };
 
 #[component(transparent)]
@@ -13,7 +16,10 @@ pub fn AccountRoutes(cx: Scope) -> impl IntoView {
         <Route
             path="/account"
             view=move |cx| {
-                view! { cx, <AccountPanel/> }
+                view! { cx,
+                    <AccountPanel/>
+                    <InfoBar/>
+                }
             }
         >
             <Route
