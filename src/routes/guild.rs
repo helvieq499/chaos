@@ -1,7 +1,7 @@
 use leptos::*;
 use leptos_router::*;
 
-use crate::panels::{guild::list::GuildListPanel, infobar::InfoBar};
+use crate::panels::{channel_bar::ChannelBar, guild::list::GuildListPanel, infobar::InfoBar};
 
 #[component(transparent)]
 pub fn GuildRoutes(cx: Scope) -> impl IntoView {
@@ -16,10 +16,10 @@ pub fn GuildRoutes(cx: Scope) -> impl IntoView {
             }
         >
             <Route
-                path=":id"
+                path=":guild"
                 view=move |cx| {
                     view! { cx,
-                        <div class="panel" id="channel_bar"></div>
+                        <ChannelBar/>
                         <div class="panel" id="message_area"></div>
                     }
                 }

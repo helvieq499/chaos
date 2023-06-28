@@ -69,7 +69,7 @@ pub struct GuildCreateExtra {
     // pub member_count: u32,
     // pub voice_states: Vec<serde_json::Value>,
     // pub members: Vec<serde_json::Value>,
-    // pub channels: Vec<serde_json::Value>,
+    pub channels: Vec<super::Channel>,
     // pub threads: Vec<serde_json::Value>,
     // pub presences: Vec<serde_json::Value>,
     // pub stage_instances: Vec<serde_json::Value>,
