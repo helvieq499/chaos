@@ -10,7 +10,7 @@ pub enum Event {
         #[serde(rename = "d")]
         data: serde_json::Value,
     },
-    
+
     // #[serde(rename = "7")]
     Reconnect {
         op: OpCode<7>,

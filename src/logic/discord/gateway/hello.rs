@@ -9,7 +9,7 @@ pub struct HelloData {
 }
 
 impl HelloData {
-    pub fn handle(&self, cx: Scope, client: Rc<Client>) {
+    pub fn handle(self, cx: Scope, client: Rc<Client>) {
         log::debug!("Sending heartbeat every {} ms", self.heartbeat_interval);
 
         let socket = use_context::<SocketType>(cx).expect("to be provided");

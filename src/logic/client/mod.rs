@@ -5,9 +5,7 @@ use std::{rc::Rc, sync::RwLock};
 pub mod credentials;
 pub use self::credentials::Credentials;
 
-use self::guild::Guild;
-
-pub mod guild;
+use super::types::Guild;
 
 pub struct Client {
     pub connect: RwSignal<bool>,

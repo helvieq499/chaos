@@ -3,7 +3,7 @@ use std::rc::Rc;
 use leptos::*;
 use leptos_router::*;
 
-use crate::logic::{client::guild::Guild, Client};
+use crate::logic::{types::Guild, Client};
 
 #[component]
 pub fn GuildListPanel(cx: Scope) -> impl IntoView {
@@ -28,46 +28,38 @@ pub fn GuildListPanel(cx: Scope) -> impl IntoView {
             <div id="guild_list" class="panel">
                 <Show
                     when=move || !guilds.is_empty()
-                    fallback=move |cx| view! { cx,
-                        <div>"No Guilds"</div>
+                    fallback=move |cx| {
+                        view! { cx, <div>"No Guilds"</div> }
                     }
                 >
                     <div id="guild_list_container">
                         <For
                             each=guild_list
                             key=|guild| guild.key()
-                            view=move |cx, guild| view! { cx,
-                                <A href={format!("/guilds/{}", guild.key_str())}>
-                                    {
-                                        match guild.as_ref() {
-                                            Guild::Unavailable(guild) => {
-                                                view! { cx,
+                            view=move |cx, guild| {
+                                view! { cx,
+                                    <A href=format!("/guilds/{}", guild.id)>
+                                        {
+                                            view! { cx,
+                                                <div style=(
+                                                    "background-image",
+                                                    {
+                                                        guild
+                                                            .info
+                                                            .as_ref()
+                                                            .and_then(|info| info.icon.as_ref())
+                                                            .map_or(String::new(), |icon| { format_image_url(&guild.id, icon) })
+                                                    },
+                                                )>
                                                     <div>
-                                                        <div>"Unavailable Guild"</div>
-                                                        <span class="iconify" data-icon="carbon:error-filled"></span>
-                                                        <div class="guild_id">{&guild.id}</div>
+                                                        {guild.info.as_ref().map_or_else(|| String::from("Unavailable"), |info| info.name.clone())}
                                                     </div>
-                                                }
-                                            }
-                                            Guild::Available(guild) => {
-                                                view! { cx,
-                                                    <div style=(
-                                                        "background-image",
-                                                        {
-                                                            guild
-                                                                .icon
-                                                                .as_ref()
-                                                                .map_or(String::new(), |icon| { format_image_url(&guild.id, icon) })
-                                                        },
-                                                    )>
-                                                        <div>{&guild.name}</div>
-                                                        <div class="guild_id">{&guild.id}</div>
-                                                    </div>
-                                                }
+                                                    <div class="guild_id">{&guild.id}</div>
+                                                </div>
                                             }
                                         }
-                                    }
-                                </A>
+                                    </A>
+                                }
                             }
                         />
                     </div>

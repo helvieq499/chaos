@@ -3,6 +3,7 @@ use leptos::*;
 pub mod discord;
 pub mod gateway_url;
 pub mod socket;
+pub mod types;
 
 pub mod client;
 pub use client::Client;
