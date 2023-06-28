@@ -5,9 +5,7 @@ use std::{rc::Rc, sync::RwLock};
 pub mod credentials;
 pub use self::credentials::Credentials;
 
-pub mod state;
 use self::guild::Guild;
-pub use self::state::ClientState;
 
 pub mod guild;
 
@@ -16,7 +14,6 @@ pub struct Client {
     pub sequence: RwLock<Option<i32>>,
     pub credentials: RwSignal<Option<Credentials>>,
 
-    pub initial_state: RwSignal<Option<RwLock<ClientState>>>,
     pub guilds: RwSignal<RwLock<HashMap<u64, Rc<Guild>>>>,
 }
 
@@ -27,7 +24,6 @@ impl Client {
             sequence: RwLock::new(None),
             credentials: create_rw_signal(cx, Credentials::from_local_storage()),
 
-            initial_state: create_rw_signal(cx, None),
             guilds: create_rw_signal(cx, RwLock::new(HashMap::new())),
         }
     }

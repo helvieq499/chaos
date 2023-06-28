@@ -3,6 +3,10 @@ use std::rc::Rc;
 use leptos::*;
 use wasm_sockets::{EventClient, Message};
 
+use crate::logic::discord::{dispatch, gateway};
+
+use super::discord::{Event, Payload};
+
 pub type SocketType = ReadSignal<Option<Rc<EventClient>>>;
 
 pub fn setup(cx: Scope) {
@@ -53,21 +57,30 @@ fn on_connection(_socket: &EventClient) {
 }
 
 fn on_message(client: Rc<super::Client>, _socket: &EventClient, msg: Message, cx: Scope) {
-    if let Message::Text(ref text) = msg {
-        if let Ok(event) = serde_json::from_str::<super::discord::RecvEvent>(text) {
-            log::trace!("{:?}", event);
+    match msg {
+        Message::Text(text) => {
+            log::trace!("{}", text);
 
-            match event.opcode {
-                0 => super::discord::handle::dispatch(client, event),
-                10 => super::discord::handle::hello(client, event, cx),
-                11 => (), // heartbeat acknowledge
-                x => log::warn!("Unknown opcode {x}"),
+            if let Ok(payload) = serde_json::from_str::<Payload>(&text) {
+                match payload.event {
+                    Event::DispatchEvent(event) => match event {
+                        dispatch::Event::GuildCreate(data) => data.handle(client),
+                        dispatch::Event::Ready(data) => data.handle(client),
+                    },
+                    Event::GatewayEvent(event) => match event {
+                        gateway::Event::Hello { data, .. } => data.handle(cx, client),
+                        gateway::Event::HeartbeatAck { .. } => (), // expected behavior: disconnect if this is not received
+                        ev => log::warn!("Unknown gateway event {:?}", ev),
+                    },
+                    Event::Raw(event) => log::debug!(
+                        "Unknown event op[{}] t[{}]",
+                        event.opcode,
+                        event.typ.unwrap_or_default()
+                    ),
+                }
             }
-        } else {
-            log::error!("Failed to parse message");
         }
-    } else {
-        log::warn!("Socket received an unknown binary message");
+        Message::Binary(_) => log::warn!("Gateway sent an unknown binary message"),
     }
 }
 

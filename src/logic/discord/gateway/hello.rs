@@ -1,18 +1,20 @@
+use crate::logic::{client::Credentials, discord::RawPayload, socket::SocketType, Client};
 use leptos::*;
 use std::rc::Rc;
 use wasm_sockets::ConnectionStatus;
 
-use crate::logic::{
-    client::credentials::Credentials, discord::RecvEvent, socket::SocketType, Client,
-};
+#[derive(Debug, serde::Deserialize)]
+pub struct HelloData {
+    pub heartbeat_interval: u64,
+}
 
-pub fn hello(client: Rc<Client>, event: crate::logic::discord::RecvEvent, cx: Scope) {
-    if let Some(heartbeat_interval) = event.data["heartbeat_interval"].as_u64() {
-        log::debug!("Sending heartbeat every {heartbeat_interval} ms");
+impl HelloData {
+    pub fn handle(&self, cx: Scope, client: Rc<Client>) {
+        log::debug!("Sending heartbeat every {} ms", self.heartbeat_interval);
 
         let socket = use_context::<SocketType>(cx).expect("to be provided");
 
-        start_heartbeat_interval(client.clone(), socket, heartbeat_interval);
+        start_heartbeat_interval(client.clone(), socket, self.heartbeat_interval);
 
         client.credentials.with_untracked(move |creds| {
             if let Some(creds) = creds {
@@ -24,7 +26,7 @@ pub fn hello(client: Rc<Client>, event: crate::logic::discord::RecvEvent, cx: Sc
                             user_identify(creds)
                         };
 
-                        serde_json::to_string(&RecvEvent::new(2, data)).map_or_else(
+                        serde_json::to_string(&RawPayload::new(2, data)).map_or_else(
                             |_| log::error!("Failed to serialize identify packet"),
                             |packet| {
                                 if socket.send_string(&packet).is_err() {
@@ -44,7 +46,7 @@ fn start_heartbeat_interval(client: Rc<Client>, socket: SocketType, interval: u6
         let duration = std::time::Duration::from_millis(interval);
 
         loop {
-            if let Ok(payload) = serde_json::to_string(&RecvEvent::new(
+            if let Ok(payload) = serde_json::to_string(&RawPayload::new(
                 1,
                 (*client.sequence.read().expect("not poisoned"))
                     .map_or(serde_json::Value::Null, |x| {

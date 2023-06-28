@@ -1,5 +1,6 @@
 #![warn(clippy::nursery, clippy::pedantic, clippy::unwrap_used)]
 #![allow(
+    clippy::enum_variant_names,
     clippy::future_not_send,
     clippy::module_name_repetitions,
     clippy::needless_pass_by_value,
