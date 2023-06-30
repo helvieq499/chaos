@@ -1,14 +1,10 @@
 use leptos::*;
 use leptos_router::*;
 
-use crate::panels::account::login::Reload;
-
 #[component]
 pub fn AccountInfo(cx: Scope) -> impl IntoView {
     let client = crate::logic::Client::get(cx);
     let credentials = client.credentials;
-
-    let reload = use_context::<RwSignal<Reload>>(cx).expect("to be provided");
 
     let logout = move |_| {
         if let Some(local_storage) = crate::utils::local_storage::get() {
@@ -16,7 +12,6 @@ pub fn AccountInfo(cx: Scope) -> impl IntoView {
         }
 
         credentials.set(None);
-        reload.set(Reload);
     };
 
     let connect = move |_| client.connect.set(true);

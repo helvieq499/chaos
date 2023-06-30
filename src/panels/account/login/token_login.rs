@@ -4,7 +4,6 @@ use leptos::{html::Input, *};
 pub fn AccountTokenLogin(cx: Scope) -> impl IntoView {
     let client = crate::logic::Client::get(cx);
     let credentials = client.credentials;
-    let reload = use_context::<RwSignal<super::Reload>>(cx).expect("to be provided");
 
     let token_elem: NodeRef<Input> = create_node_ref(cx);
     let (is_bot, set_is_bot) = create_signal(cx, true);
@@ -27,7 +26,6 @@ pub fn AccountTokenLogin(cx: Scope) -> impl IntoView {
         }
 
         credentials.set(Some(creds));
-        reload.set(super::Reload);
     };
 
     let on_check = |target: WriteSignal<bool>| move |ev| target(event_target_checked(&ev));
