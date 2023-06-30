@@ -38,20 +38,21 @@ pub fn AccountTokenLogin(cx: Scope) -> impl IntoView {
     view! { cx,
         <input node_ref=token_elem placeholder="Token"/>
         <br/>
-
         <label for="is-bot">"Is Bot"</label>
         <input on:input=on_check_is_bot name="is-bot" type="checkbox" checked=true/>
         <br/>
-
         <Show when=is_bot fallback=|_| ()>
             <label for="message-intent">"Message Content"</label>
-            <input on:input=on_check_message_intent name="message-intent" type="checkbox" checked=false/>
+            <input
+                on:input=on_check_message_intent
+                name="message-intent"
+                type="checkbox"
+                checked=false
+            />
             <label for="message-intent">"(Privileged Intent)"</label>
             <br/>
         </Show>
-
         <button on:click=login>"Login"</button>
-
         <Show when=move || !is_bot() fallback=|_| ()>
             <div id="warning-user-account">
                 <h2>"User accounts will never be fully supported"</h2>

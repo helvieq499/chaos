@@ -1,11 +1,9 @@
-use std::rc::Rc;
-
-use leptos::*;
-use wasm_sockets::{EventClient, Message};
-
-use crate::logic::discord::{dispatch, gateway};
-
 use super::discord::{Event, Payload};
+use crate::logic::discord::{dispatch, gateway};
+use crate::panels::infobar::missing_intents::Enable as MissingIntentsWarning;
+use leptos::*;
+use std::rc::Rc;
+use wasm_sockets::{EventClient, Message};
 
 pub type SocketType = ReadSignal<Option<Rc<EventClient>>>;
 
@@ -35,7 +33,7 @@ pub fn setup(cx: Scope) {
                             socket.set_on_message(Some(Box::new(move |socket, message| {
                                 on_message(client.clone(), socket, message, cx);
                             })));
-                            socket.set_on_close(Some(Box::new(on_close)));
+                            socket.set_on_close(Some(Box::new(move |event| on_close(event, cx))));
                             socket.set_on_error(Some(Box::new(on_error)));
 
                             Some(Rc::new(socket))
@@ -84,7 +82,7 @@ fn on_message(client: Rc<super::Client>, _socket: &EventClient, msg: Message, cx
     }
 }
 
-fn on_close(close: web_sys::CloseEvent) {
+fn on_close(close: web_sys::CloseEvent, cx: Scope) {
     const CLOSED: &str = "Socket closed:";
 
     let code = close.code();
@@ -93,8 +91,13 @@ fn on_close(close: web_sys::CloseEvent) {
         4008 => log::warn!("{CLOSED} rate limited"),
         4009 => log::warn!("{CLOSED} timed out"),
         4011 => log::warn!("{CLOSED} bot too big"),
-        // TODO: show a notification that the intent is not enabled 
-        4014 => log::warn!("{CLOSED} disallowed intent"), 
+        // TODO: show a notification that the intent is not enabled
+        4014 => {
+            log::warn!("{CLOSED} disallowed intent");
+            use_context::<RwSignal<MissingIntentsWarning>>(cx)
+                .expect("provided")
+                .set(MissingIntentsWarning);
+        }
         code => log::error!("{CLOSED} {} ({code})", close.reason()),
     }
 }
