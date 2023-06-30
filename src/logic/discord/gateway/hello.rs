@@ -74,6 +74,11 @@ fn start_heartbeat_interval(client: Rc<Client>, socket: SocketType, interval: u6
 }
 
 fn bot_identify(creds: &Credentials) -> serde_json::Value {
+    let mut intents = 0b11_0001_0111_1110_1111_1101;
+    if creds.message_intent {
+        intents |= 1 << 15;
+    }
+
     serde_json::json!({
         "token": creds.token,
         "properties": {
@@ -82,7 +87,7 @@ fn bot_identify(creds: &Credentials) -> serde_json::Value {
             "device": "discord.py",
         },
         "compress": false,
-        "intents": 0b11_0001_0111_1110_1111_1101,
+        "intents": intents,
     })
 }
 

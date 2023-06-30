@@ -2,6 +2,8 @@
 pub struct Credentials {
     pub token: String,
     pub is_bot: bool,
+    #[serde(default)]
+    pub message_intent: bool,
 }
 
 impl Credentials {

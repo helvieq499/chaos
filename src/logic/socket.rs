@@ -85,7 +85,18 @@ fn on_message(client: Rc<super::Client>, _socket: &EventClient, msg: Message, cx
 }
 
 fn on_close(close: web_sys::CloseEvent) {
-    log::warn!("Socket closed gracefully\n{:?}", close);
+    const CLOSED: &str = "Socket closed:";
+
+    let code = close.code();
+
+    match code {
+        4008 => log::warn!("{CLOSED} rate limited"),
+        4009 => log::warn!("{CLOSED} timed out"),
+        4011 => log::warn!("{CLOSED} bot too big"),
+        // TODO: show a notification that the intent is not enabled 
+        4014 => log::warn!("{CLOSED} disallowed intent"), 
+        code => log::error!("{CLOSED} {} ({code})", close.reason()),
+    }
 }
 
 fn on_error(error: web_sys::ErrorEvent) {
