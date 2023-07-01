@@ -12,13 +12,9 @@ pub fn ChannelBar(cx: Scope) -> impl IntoView {
         param
             .with(|params| params.get("guild").cloned())
             .and_then(|id| {
-                client.guilds.with(|guilds| {
-                    guilds
-                        .read()
-                        .expect("unpoisoned")
-                        .get(&id.parse().unwrap_or_default())
-                        .cloned()
-                })
+                client
+                    .guilds
+                    .with(|guilds| guilds.get(id.parse().expect("valid id")))
             })
     };
 

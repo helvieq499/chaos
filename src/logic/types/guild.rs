@@ -8,6 +8,9 @@ pub struct Guild {
 
     #[serde(flatten)]
     pub extra: Option<GuildCreateExtra>,
+
+    #[serde(skip, default)]
+    pub channels: Vec<super::Channel>,
 }
 
 impl Guild {

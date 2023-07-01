@@ -8,11 +8,7 @@ pub fn MissingIntents(cx: Scope) -> impl IntoView {
     let signal = use_context::<RwSignal<Enable>>(cx).expect("provided");
     let socket = use_context::<SocketType>(cx).expect("provided");
     let (enabled, set_enabled) = create_signal(cx, false);
-    let visibility = move || if enabled() {
-        ""
-    } else {
-        "none"
-    };
+    let visibility = move || if enabled() { "" } else { "none" };
 
     create_effect(cx, move |skip| {
         signal.with(|_| ());
