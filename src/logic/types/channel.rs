@@ -37,3 +37,9 @@ pub struct Channel {
     pub default_sort_order: Option<u8>,
     pub default_forum_layout: Option<u8>,
 }
+
+impl Channel {
+    pub fn key(&self) -> u64 {
+        self.id.parse::<u64>().expect("valid id")
+    }
+}

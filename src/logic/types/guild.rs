@@ -1,3 +1,5 @@
+use std::{collections::HashMap, rc::Rc, sync::RwLock};
+
 #[derive(Debug, serde::Deserialize)]
 pub struct Guild {
     pub id: String,
@@ -7,10 +9,10 @@ pub struct Guild {
     pub info: Option<FullGuild>,
 
     #[serde(flatten)]
-    pub extra: Option<GuildCreateExtra>,
+    pub extra: RwLock<Option<GuildCreateExtra>>,
 
     #[serde(skip, default)]
-    pub channels: Vec<super::Channel>,
+    pub channels: RwLock<HashMap<u64, Rc<super::Channel>>>,
 }
 
 impl Guild {
@@ -72,7 +74,7 @@ pub struct GuildCreateExtra {
     // pub member_count: u32,
     // pub voice_states: Vec<serde_json::Value>,
     // pub members: Vec<serde_json::Value>,
-    pub channels: Vec<super::Channel>,
+    pub channels: Option<Vec<super::Channel>>,
     // pub threads: Vec<serde_json::Value>,
     // pub presences: Vec<serde_json::Value>,
     // pub stage_instances: Vec<serde_json::Value>,

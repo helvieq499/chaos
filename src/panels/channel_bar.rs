@@ -19,8 +19,7 @@ pub fn ChannelBar(cx: Scope) -> impl IntoView {
     };
 
     move || {
-        let channels =
-            guild().and_then(|guild| guild.extra.as_ref().map(|extra| extra.channels.clone()));
+        let channels = guild().map(|guild| guild.channels.read().expect("unpoisoned").clone());
 
         view! { cx,
             <div class="panel" id="channel_bar">
@@ -34,12 +33,12 @@ pub fn ChannelBar(cx: Scope) -> impl IntoView {
                             view! { cx,
                                 <For
                                     each=move || channels.clone()
-                                    key=|channel| { channel.id.parse::<u8>().unwrap_or_default() }
+                                    key=|channel| { channel.0 }
                                     view=|cx, channel| {
                                         view! { cx,
                                             <div class="channel">
-                                                <A href=format!("./channel/{}", channel.id)>
-                                                    {channel.name.unwrap_or_else(|| String::from("Unnamed channel"))}
+                                                <A href=format!("./channels/{}", channel.0)>
+                                                    {channel.1.name.as_ref().cloned().unwrap_or_else(|| String::from("Unnamed channel"))}
                                                 </A>
                                             </div>
                                         }
