@@ -39,7 +39,7 @@ pub fn GuildListPanel(cx: Scope) -> impl IntoView {
                             key=|guild| guild.key()
                             view=move |cx, guild| {
                                 view! { cx,
-                                    <A href=format!("/guilds/{}", guild.id)>
+                                    <A href=format!("/guilds/{}/channels", guild.id)>
                                         {
                                             view! { cx,
                                                 <div style=(

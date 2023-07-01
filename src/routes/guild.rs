@@ -18,12 +18,13 @@ pub fn GuildRoutes(cx: Scope) -> impl IntoView {
             <Route
                 path=":guild"
                 view=move |cx| {
-                    view! { cx,
-                        <ChannelBar/>
-                        <div class="panel" id="message_area"></div>
-                    }
+                    view! { cx, <ChannelBar/> }
                 }
-            />
+            >
+                <Route path="/channels" view=move |_| ()/>
+                <Route path="" view=move |_| ()/>
+            </Route>
+
             <Route
                 path=""
                 view=move |cx| {
