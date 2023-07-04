@@ -64,6 +64,7 @@ fn on_message(client: Rc<super::Client>, _socket: &EventClient, msg: Message, cx
                     Event::DispatchEvent(event) => match event {
                         dispatch::Event::GuildCreate(data) => data.handle(client),
                         dispatch::Event::Ready(data) => data.handle(client),
+                        dispatch::Event::MessageCreate(data) => data.handle(client),
                     },
                     Event::GatewayEvent(event) => match event {
                         gateway::Event::Hello { data, .. } => data.handle(cx, client),

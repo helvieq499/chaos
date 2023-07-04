@@ -1,3 +1,5 @@
+use std::{rc::Rc, sync::RwLock};
+
 #[derive(Clone, Debug, serde::Deserialize)]
 pub struct Channel {
     pub id: String,
@@ -36,6 +38,9 @@ pub struct Channel {
     pub default_thread_rate_limit_per_user: Option<u16>,
     pub default_sort_order: Option<u8>,
     pub default_forum_layout: Option<u8>,
+
+    #[serde(skip, default)]
+    pub messages: Rc<RwLock<Vec<Rc<super::Message>>>>,
 }
 
 impl Channel {
