@@ -24,7 +24,6 @@ pub fn GuildRoutes(cx: Scope) -> impl IntoView {
                 <Route path="/channels" view=move |_| ()/>
                 <Route path="" view=move |_| ()/>
             </Route>
-
             <Route
                 path=""
                 view=move |cx| {

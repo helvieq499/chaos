@@ -10,7 +10,7 @@ pub struct ReadyData {
     pub guilds: Vec<Guild>,
     pub session_id: String,
     pub resume_gateway_url: String,
-    pub application: serde_json::Value,
+    pub application: Option<serde_json::Value>,
 }
 
 impl ReadyData {
@@ -20,7 +20,7 @@ impl ReadyData {
                 let mut write_lock = guilds.0.write().expect("not poisoned");
 
                 for guild in self.guilds {
-                    write_lock.insert(guild.key(), Rc::new(guild));
+                    write_lock.insert(guild.key(), Rc::new(guild.normalize()));
                 }
             });
         }

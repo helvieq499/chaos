@@ -7,6 +7,7 @@ pub struct Guild {
 
     #[serde(flatten)]
     pub info: Option<FullGuild>,
+    properties: Option<FullGuild>,
 
     #[serde(flatten)]
     pub extra: RwLock<Option<GuildCreateExtra>>,
@@ -18,6 +19,30 @@ pub struct Guild {
 impl Guild {
     pub fn key(&self) -> u64 {
         self.id.parse::<u64>().expect("valid id")
+    }
+
+    pub fn normalize(mut self) -> Self {
+        // migrate properties into info because the user api doesn't flatten it
+        if let Some(props) = self.properties.take() {
+            self.info = Some(props);
+        }
+
+        // migrate channels into hashmap
+        let mut extra_lock = self.extra.write().expect("unpoisoned");
+        let mut channels_lock = self.channels.write().expect("unpoisoned");
+        let old_channels = extra_lock.take().and_then(|extra| extra.channels);
+
+        drop(extra_lock);
+
+        if let Some(channels) = old_channels {
+            for channel in channels {
+                channels_lock.insert(channel.key(), Rc::new(channel));
+            }
+        }
+
+        drop(channels_lock);
+
+        self
     }
 }
 
