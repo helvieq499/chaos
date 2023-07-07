@@ -11,6 +11,8 @@ pub struct Client {
     pub credentials: RwSignal<Option<Credentials>>,
 
     pub guilds: RwSignal<RwLock<HashMap<u64, Rc<Guild>>>>,
+
+    pub http: Rc<reqwest::Client>,
 }
 
 impl Client {
@@ -21,6 +23,8 @@ impl Client {
             credentials: create_rw_signal(cx, Credentials::from_local_storage()),
 
             guilds: create_rw_signal(cx, RwLock::new(HashMap::new())),
+
+            http: Rc::new(reqwest::Client::new()),
         }
     }
 

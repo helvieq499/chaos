@@ -1,7 +1,10 @@
 use leptos::*;
 use leptos_router::*;
 
-use crate::logic::{types::Message, Client};
+use crate::{
+    logic::{types::Message, Client},
+    utils::request_builder_ext::RequestBuilderExt,
+};
 
 #[component]
 pub fn MessagePanel(cx: Scope) -> impl IntoView {
@@ -10,51 +13,26 @@ pub fn MessagePanel(cx: Scope) -> impl IntoView {
     let params = use_params_map(cx);
     let source = move || params.with(|params| params.get("channel").cloned());
 
-    let options = move || {
-        client.credentials.get().map(|creds| {
-            let headers = js_sys::Object::new();
-
-            js_sys::Reflect::set(
-                &headers,
-                &js_sys::JsString::from("Authorization"),
-                &js_sys::JsString::from(creds.token),
-            )
-            .expect("reflect set");
-
-            let mut options = web_sys::RequestInit::new();
-            options.headers(&headers);
-            options
-        })
-    };
-
-    let messages = create_resource(cx, source, move |data| {
-        log::info!("REFETCH");
-        let options = options();
+    let messages = create_local_resource(cx, source, move |data| {
+        let http = client.http.clone();
+        let credentials = client.credentials.get_untracked().clone();
         async move {
-            if let Some(options) = options {
+            if let Some(creds) = credentials {
                 if let Some(channel) = data {
-                    if let Ok(text) = wasm_bindgen_futures::JsFuture::from(
-                        web_sys::window().expect("exists").fetch_with_str_and_init(
-                            &format!("https://discord.com/api/v10/channels/{}/messages", &channel),
-                            &options,
-                        ),
-                    )
-                    .await
-                    .and_then(|resp| web_sys::Request::from(resp).text())
+                    if let Ok(response) = http
+                        .get(&format!(
+                            "https://discord.com/api/v10/channels/{}/messages",
+                            &channel
+                        ))
+                        .auth(&creds)
+                        .send()
+                        .await
                     {
-                        if let Ok(text) = wasm_bindgen_futures::JsFuture::from(text).await {
-                            js_sys::JsString::from(text)
-                                .as_string()
-                                .and_then(|text| serde_json::from_str::<Vec<Message>>(&text).ok())
-                                .map(|messages| {
-                                    messages
-                                        .iter()
-                                        .map(|message| message.content.clone())
-                                        .collect::<Vec<_>>()
-                                })
-                        } else {
-                            None
-                        }
+                        response
+                            .text()
+                            .await
+                            .ok()
+                            .and_then(|text| serde_json::from_str::<Vec<Message>>(&text).ok())
                     } else {
                         None
                     }
@@ -67,10 +45,28 @@ pub fn MessagePanel(cx: Scope) -> impl IntoView {
         }
     });
 
+    let messages = move || {
+        messages.with(cx, |messages| {
+            messages.as_ref().map(|messages| {
+                messages
+                    .iter()
+                    .rev()
+                    .map(|message| {
+                        view! { cx,
+                            <div>
+                                {&message.content}
+                            </div>
+                        }
+                    })
+                    .collect::<Vec<_>>()
+            })
+        })
+    };
+
     view! { cx,
         <div id="message_panel" class="panel">
             <Suspense fallback=move || view! { cx, <div>"Loading messages"</div> }>
-                {messages.read(cx).flatten()}
+                {messages}
             </Suspense>
         </div>
     }
