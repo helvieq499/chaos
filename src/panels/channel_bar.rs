@@ -37,7 +37,7 @@ pub fn ChannelBar(cx: Scope) -> impl IntoView {
                                     view=|cx, channel| {
                                         view! { cx,
                                             <div class="channel">
-                                                <A href=format!("./channels/{}", channel.0)>
+                                                <A href=format!("./{}", channel.0)>
                                                     {channel.1.name.as_ref().cloned().unwrap_or_else(|| String::from("Unnamed channel"))}
                                                 </A>
                                             </div>

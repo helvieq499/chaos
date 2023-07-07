@@ -14,9 +14,9 @@ pub struct Message {
     pub attachments: Option<Vec<serde_json::Value>>,
     pub embeds: Option<Vec<serde_json::Value>>,
     pub reactions: Option<Vec<serde_json::Value>>,
-    pub nonce: serde_json::Value,
+    pub nonce: Option<serde_json::Value>,
     pub pinned: bool,
-    pub webhook_id: String,
+    pub webhook_id: Option<String>,
     #[serde(rename = "type")]
     pub typ: u8,
     pub activity: Option<serde_json::Value>,
