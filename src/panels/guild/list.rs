@@ -13,7 +13,6 @@ pub fn GuildListPanel(cx: Scope) -> impl IntoView {
     let guild_list = move || {
         guilds.with(|guilds| {
             guilds
-                .0
                 .read()
                 .expect("unpoisoned")
                 .values()

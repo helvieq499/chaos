@@ -17,7 +17,7 @@ impl ReadyData {
     pub fn handle(self, client: Rc<Client>) {
         if !self.guilds.is_empty() {
             client.guilds.update(|guilds| {
-                let mut write_lock = guilds.0.write().expect("not poisoned");
+                let mut write_lock = guilds.write().expect("not poisoned");
 
                 for guild in self.guilds {
                     write_lock.insert(guild.key(), Rc::new(guild.normalize()));

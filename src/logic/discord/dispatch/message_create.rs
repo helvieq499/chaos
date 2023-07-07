@@ -1,4 +1,7 @@
-use crate::logic::{types::Message, Client};
+use crate::{
+    logic::{types::Message, Client},
+    utils::collection_ext::CollectionExt,
+};
 use leptos::*;
 use std::rc::Rc;
 

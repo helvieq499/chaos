@@ -1,7 +1,7 @@
 use leptos::*;
 use leptos_router::*;
 
-use crate::logic::Client;
+use crate::{logic::Client, utils::collection_ext::CollectionExt};
 
 #[component]
 pub fn ChannelBar(cx: Scope) -> impl IntoView {

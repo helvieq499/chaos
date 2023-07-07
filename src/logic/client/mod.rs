@@ -1,17 +1,16 @@
 use leptos::*;
-use std::{rc::Rc, sync::RwLock};
+use std::{collections::HashMap, rc::Rc, sync::RwLock};
 
 pub mod credentials;
 pub use self::credentials::Credentials;
-
-pub mod guilds;
+use super::types::Guild;
 
 pub struct Client {
     pub connect: RwSignal<bool>,
     pub sequence: RwLock<Option<i32>>,
     pub credentials: RwSignal<Option<Credentials>>,
 
-    pub guilds: RwSignal<guilds::Guilds>,
+    pub guilds: RwSignal<RwLock<HashMap<u64, Rc<Guild>>>>,
 }
 
 impl Client {
@@ -21,7 +20,7 @@ impl Client {
             sequence: RwLock::new(None),
             credentials: create_rw_signal(cx, Credentials::from_local_storage()),
 
-            guilds: create_rw_signal(cx, guilds::Guilds::default()),
+            guilds: create_rw_signal(cx, RwLock::new(HashMap::new())),
         }
     }
 
