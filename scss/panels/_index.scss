@@ -1,7 +1,8 @@
-@use "channels";
-@use "guilds";
-@use "info_bar";
 @use "account";
+@use "channel_list";
+@use "guild_list";
+@use "info_bar";
+@use "message_list";
 
 #app_horizontal {
     flex-direction: row;
@@ -13,12 +14,4 @@
     margin: 4px;
     border-radius: 4px;
     padding: 4px;
-}
-
-#channel_bar {
-    flex: 1;
-}
-
-#message_panel {
-    flex: 3;
 }

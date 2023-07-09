@@ -22,7 +22,7 @@ pub fn ChannelBar(cx: Scope) -> impl IntoView {
         let channels = guild().map(|guild| guild.channels.read().expect("unpoisoned").clone());
 
         view! { cx,
-            <div class="panel" id="channel_bar">
+            <div class="panel" id="channel_list">
                 {channels
                     .map_or_else(
                         || {

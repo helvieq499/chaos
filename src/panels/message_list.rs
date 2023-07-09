@@ -64,7 +64,7 @@ pub fn MessagePanel(cx: Scope) -> impl IntoView {
     };
 
     view! { cx,
-        <div id="message_panel" class="panel">
+        <div id="message_list" class="panel">
             <Suspense fallback=move || view! { cx, <div>"Loading messages"</div> }>
                 {messages}
             </Suspense>
