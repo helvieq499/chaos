@@ -2,7 +2,7 @@
 pub struct Message {
     pub id: String,
     pub channel_id: String,
-    pub author: serde_json::Value,
+    pub author: super::User,
     pub content: String,
     pub timestamp: String,
     pub edited_timestamp: Option<String>,
@@ -29,7 +29,6 @@ pub struct Message {
     pub thread: Option<super::Channel>,
     pub components: Option<Vec<serde_json::Value>>,
     pub sticker_items: Option<Vec<serde_json::Value>>,
-    pub stickers: Option<Vec<serde_json::Value>>,
     pub position: Option<i32>,
     pub role_subscription_data: Option<serde_json::Value>,
 

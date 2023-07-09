@@ -33,5 +33,5 @@ pub fn ListedGuild(cx: Scope, guild: Rc<Guild>) -> impl IntoView {
 }
 
 fn format_image_url(id: &str, icon: &str) -> String {
-    format!("url(https://cdn.discordapp.com/icons/{id}/{icon}?size=512)")
+    format!("url(https://cdn.discordapp.com/icons/{id}/{icon}.png?size=512)")
 }

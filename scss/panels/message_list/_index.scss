@@ -4,11 +4,22 @@
     scrollbar-width: thin;
     padding-bottom: 28px; // TODO: this is a hack
 
-    & > * {
+    &>.message {
         background-color: #222;
         margin: 4px;
         border-radius: 4px;
         padding: 4px;
+
+        &>.pfp {
+            width: 32px;
+            user-select: none;
+        }
+
+        &>.username {
+            vertical-align: top;
+            font-size: 20px;
+            margin-left: 4px;
+        }
 
         & * {
             margin: 0px;

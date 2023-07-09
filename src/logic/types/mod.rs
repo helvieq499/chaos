@@ -6,3 +6,6 @@ pub use channel::Channel;
 
 pub mod message;
 pub use message::Message;
+
+mod user;
+pub use user::User;

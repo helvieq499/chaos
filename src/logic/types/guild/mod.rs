@@ -1,5 +1,8 @@
 use std::{collections::HashMap, rc::Rc, sync::RwLock};
 
+mod member;
+pub use member::Member;
+
 #[derive(Debug, serde::Deserialize)]
 pub struct Guild {
     pub id: String,

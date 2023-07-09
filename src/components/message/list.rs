@@ -52,6 +52,7 @@ pub fn MessagePanel(cx: Scope) -> impl IntoView {
                     .iter()
                     .rev()
                     .map(|message| {
+                        // TODO: make this clone cheaper
                         let message = message.clone();
                         view! { cx, <ListedMessage message/> }
                     })
