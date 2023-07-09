@@ -1,3 +1,10 @@
 #message_list {
     flex: 3;
+
+    & > * {
+        background-color: #222;
+        margin: 4px;
+        border-radius: 4px;
+        padding: 0px 4px;
+    }
 }
