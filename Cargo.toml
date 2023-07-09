@@ -3,26 +3,30 @@ name = "chaos"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
-comrak = "0.18.0"
-console_error_panic_hook = "0.1.7"
+comrak = "0.18"
+console_error_panic_hook = "0.1"
 js-sys = "0.3"
-leptos = "0.3"
-log = "0.4.19"
-reqwest = "0.11.18"
-serde_json = "1.0.99"
-wasm-bindgen-futures = "0.4.37"
-wasm-logger = "0.2.0"
-wasm-sockets = "1.0.0"
+log = "0.4"
+reqwest = "0.11"
+serde_json = "1.0"
+wasm-bindgen-futures = "0.4"
+wasm-logger = "0.2"
+wasm-sockets = "1.0"
 
 [dependencies.futures-timer]
-version = "3.0.2"
+version = "3.0"
 features = ["wasm-bindgen"]
 
+[dependencies.leptos]
+version = "0.4"
+features = [
+    "nightly",
+    "csr",
+]
+
 [dependencies.leptos_router]
-version = "0.3"
+version = "0.4"
 features = ["csr"]
 
 [dependencies.serde]
