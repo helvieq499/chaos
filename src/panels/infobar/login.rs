@@ -5,7 +5,7 @@ use leptos_router::*;
 pub fn LoginCheck(cx: Scope) -> impl IntoView {
     let client = crate::logic::Client::get(cx);
 
-    let condition = move || client.credentials.with(Option::is_some);
+    let condition = move || client.credentials.with(Option::is_none);
 
     view! { cx,
         <Show
