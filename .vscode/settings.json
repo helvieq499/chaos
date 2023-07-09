@@ -1,5 +1,11 @@
 {
     "rust-analyzer.cargo.target": "wasm32-unknown-unknown",
+    "rust-analyzer.procMacro.ignored": {
+        "leptos_macro": [
+            "server",
+            "component"
+        ]
+    },
     "explorer.excludeGitIgnore": true,
     "files.exclude": {
         "**/Cargo.lock": true

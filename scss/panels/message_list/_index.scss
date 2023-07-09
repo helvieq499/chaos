@@ -2,11 +2,29 @@
     flex: 3;
     overflow-y: auto;
     scrollbar-width: thin;
+    padding-bottom: 28px; // TODO: this is a hack
 
     & > * {
         background-color: #222;
         margin: 4px;
         border-radius: 4px;
-        padding: 0px 4px;
+        padding: 4px;
+
+        & * {
+            margin: 0px;
+        }
+
+        & pre {
+            background-color: #111;
+            border-radius: 4px;
+            padding: 4px;
+            width: fit-content;
+        }
+
+        & code {
+            background-color: #111;
+            font-size: 16px;
+            padding: 0px 2px;
+        }
     }
 }
