@@ -22,27 +22,12 @@ pub fn AccountRoutes(cx: Scope) -> impl IntoView {
                 }
             }
         >
-            <Route
-                path="/login"
-                view=move |cx| {
-                    view! { cx, <AccountLogin/> }
-                }
-            >
-                <Route
-                    path="/token"
-                    view=move |cx| {
-                        view! { cx, <AccountTokenLogin/> }
-                    }
-                />
+            <Route path="/login" view=AccountLogin>
+                <Route path="/token" view=AccountTokenLogin/>
                 <Route path="/user" view=move |_| ()/>
                 <Route path="" view=move |_| ()/>
             </Route>
-            <Route
-                path=""
-                view=move |cx| {
-                    view! { cx, <AccountInfo/> }
-                }
-            />
+            <Route path="" view=AccountInfo/>
         </Route>
     }
 }

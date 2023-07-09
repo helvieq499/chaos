@@ -18,12 +18,7 @@ pub fn GuildRoutes(cx: Scope) -> impl IntoView {
                 }
             }
         >
-            <Route
-                path=":guild"
-                view=move |cx| {
-                    view! { cx, <Outlet/> }
-                }
-            >
+            <Route path=":guild" view=Outlet>
                 <Route
                     path="/channels"
                     view=move |cx| {
@@ -33,22 +28,12 @@ pub fn GuildRoutes(cx: Scope) -> impl IntoView {
                         }
                     }
                 >
-                    <Route
-                        path=":channel"
-                        view=move |cx| {
-                            view! { cx, <MessagePanel/> }
-                        }
-                    />
+                    <Route path=":channel" view=MessagePanel/>
                     <Route path="" view=move |_| ()/>
                 </Route>
                 <Route path="" view=move |_| ()/>
             </Route>
-            <Route
-                path=""
-                view=move |cx| {
-                    view! { cx, <GuildListPanel/> }
-                }
-            />
+            <Route path="" view=GuildListPanel/>
         </Route>
     }
 }

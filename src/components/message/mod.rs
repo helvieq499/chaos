@@ -31,5 +31,5 @@ pub fn ListedMessage(cx: Scope, message: Message) -> impl IntoView {
         }),
     );
 
-    view! { cx, <div inner_html=message_html/> }
+    view! { cx, <div inner_html=message_html></div> }
 }
