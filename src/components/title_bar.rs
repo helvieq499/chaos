@@ -8,12 +8,7 @@ pub fn TitleBar(cx: Scope) -> impl IntoView {
         {
             let url = crate::build_info::GIT_COMMIT_HASH.map_or_else(
                 || "".to_string(),
-                |hash| {
-                    format!(
-                        "{}/commit/{hash}",
-                        crate::build_info::PKG_REPOSITORY.unwrap_or("https://example.com")
-                    )
-                },
+                |hash| format!("{}/commit/{hash}", crate::build_info::PKG_REPOSITORY),
             );
 
             view! { cx,
