@@ -10,5 +10,5 @@ pub enum Event {
     #[serde(rename = "GUILD_CREATE")]
     GuildCreate(guild_create::GuildCreateData),
     #[serde(rename = "MESSAGE_CREATE")]
-    MessageCreate(message_create::MessageCreateData)
+    MessageCreate(message_create::MessageCreateData),
 }

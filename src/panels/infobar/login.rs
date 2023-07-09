@@ -14,7 +14,7 @@ pub fn LoginCheck(cx: Scope) -> impl IntoView {
     });
 
     view! { cx,
-        <div node_ref=notif class="help-login-missing" class="help">
+        <div node_ref=notif class="help">
             <span class="iconify" data-icon="carbon:help"></span>
             <span>"You're not " <A href="/account/login/user">"signed in"</A></span>
         </div>

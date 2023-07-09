@@ -1,5 +1,8 @@
 use leptos::*;
 
+mod connect;
+pub use connect::ConnectionCheck;
+
 mod login;
 use login::LoginCheck;
 
@@ -11,6 +14,7 @@ pub fn InfoBar(cx: Scope) -> impl IntoView {
     view! { cx,
         <div class="panel" id="info_bar">
             <LoginCheck/>
+            <ConnectionCheck/>
             <MissingIntents/>
         </div>
     }

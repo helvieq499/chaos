@@ -5,6 +5,11 @@ pub mod credentials;
 pub use self::credentials::Credentials;
 use super::types::Guild;
 
+#[cfg(debug_assertions)]
+pub const START_CONNECTED: bool = false;
+#[cfg(not(debug_assertions))]
+pub const START_CONNECTED: bool = true;
+
 pub struct Client {
     pub connect: RwSignal<bool>,
     pub sequence: RwLock<Option<i32>>,
@@ -18,7 +23,7 @@ pub struct Client {
 impl Client {
     fn new(cx: Scope) -> Self {
         Self {
-            connect: create_rw_signal(cx, false),
+            connect: create_rw_signal(cx, START_CONNECTED),
             sequence: RwLock::new(None),
             credentials: create_rw_signal(cx, Credentials::from_local_storage()),
 
@@ -30,6 +35,11 @@ impl Client {
 
     pub fn get(cx: Scope) -> Rc<Self> {
         use_context(cx).expect("to be provided")
+    }
+
+    pub fn is_connected(&self) -> bool {
+        // TODO: read the socket state
+        self.connect.get()
     }
 }
 

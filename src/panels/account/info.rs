@@ -14,12 +14,8 @@ pub fn AccountInfo(cx: Scope) -> impl IntoView {
         credentials.set(None);
     };
 
-    let connect = move |_| client.connect.set(true);
-
     view! { cx,
         <A href="/account/login">"Login"</A>
         <button on:click=logout>"Logout"</button>
-        <br/>
-        <button on:click=connect>"Connect"</button>
     }
 }

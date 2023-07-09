@@ -15,7 +15,7 @@ pub fn MessagePanel(cx: Scope) -> impl IntoView {
 
     let messages = create_local_resource(cx, source, move |data| {
         let http = client.http.clone();
-        let credentials = client.credentials.get_untracked().clone();
+        let credentials = client.credentials.get_untracked();
         async move {
             if let Some(creds) = credentials {
                 if let Some(channel) = data {
