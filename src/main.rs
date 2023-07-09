@@ -12,6 +12,9 @@ use leptos::*;
 mod app;
 use app::*;
 
+#[cfg(not(debug_assertions))]
+mod build_info;
+
 mod bindings;
 mod components;
 mod logic;

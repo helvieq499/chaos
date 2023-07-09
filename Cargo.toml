@@ -2,6 +2,7 @@
 name = "chaos"
 version = "0.1.0"
 edition = "2021"
+repository = "https://github.com/helvieq499/chaos"
 
 [profile.release]
 opt-level = 'z'
@@ -52,3 +53,7 @@ features = [
     "Storage",
     "Window",
 ]
+
+[build-dependencies.built]
+version = "0.6"
+features = ["git2"]
