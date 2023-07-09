@@ -2,8 +2,8 @@ use leptos::*;
 use leptos_router::*;
 
 use crate::panels::{
-    channel_list::ChannelBar, guild::list::GuildListPanel, infobar::InfoBar,
-    message_list::MessagePanel,
+    channel::list::ChannelBar, guild::list::GuildListPanel, infobar::InfoBar,
+    message::list::MessagePanel,
 };
 
 #[component(transparent)]

@@ -30,10 +30,7 @@ pub fn MissingIntents(cx: Scope) -> impl IntoView {
     });
 
     view! { cx,
-        <Show
-            when=enabled
-            fallback=|_| ()
-        >
+        <Show when=enabled fallback=|_| ()>
             <div class="error">
                 <span class="iconify" data-icon="carbon:error"></span>
                 <span>"Intents that you marked when logging in are not enabled."</span>

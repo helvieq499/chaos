@@ -1,10 +1,10 @@
-use leptos::*;
-use leptos_router::*;
-
+use super::ListedMessage;
 use crate::{
     logic::{types::Message, Client},
     utils::request_builder_ext::RequestBuilderExt,
 };
+use leptos::*;
+use leptos_router::*;
 
 #[component]
 pub fn MessagePanel(cx: Scope) -> impl IntoView {
@@ -52,11 +52,8 @@ pub fn MessagePanel(cx: Scope) -> impl IntoView {
                     .iter()
                     .rev()
                     .map(|message| {
-                        view! { cx,
-                            <div>
-                                {&message.content}
-                            </div>
-                        }
+                        let message = message.clone();
+                        view! { cx, <ListedMessage message/> }
                     })
                     .collect::<Vec<_>>()
             })
@@ -65,9 +62,9 @@ pub fn MessagePanel(cx: Scope) -> impl IntoView {
 
     view! { cx,
         <div id="message_list" class="panel">
-            <Suspense fallback=move || view! { cx, <div>"Loading messages"</div> }>
-                {messages}
-            </Suspense>
+            <Suspense fallback=move || {
+                view! { cx, <div>"Loading messages"</div> }
+            }>{messages}</Suspense>
         </div>
     }
 }

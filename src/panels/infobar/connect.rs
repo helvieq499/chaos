@@ -12,13 +12,14 @@ pub fn ConnectionCheck(cx: Scope) -> impl IntoView {
     let connect = move |_| connect_signal.set(true);
 
     view! { cx,
-        <Show
-            when=condition
-            fallback=move |_| ()
-        >
+        <Show when=condition fallback=move |_| ()>
             <div class="help">
                 <span class="iconify" data-icon="carbon:help"></span>
-                <span>"You're not " <a href="#" on:click=connect>"connected"</a></span>
+                <span>
+                    "You're not " <a href="#" on:click=connect>
+                        "connected"
+                    </a>
+                </span>
             </div>
         </Show>
     }

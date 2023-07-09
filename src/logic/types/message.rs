@@ -1,4 +1,4 @@
-#[derive(Debug, serde::Deserialize)]
+#[derive(Clone, Debug, serde::Deserialize)]
 pub struct Message {
     pub id: String,
     pub channel_id: String,
@@ -37,7 +37,7 @@ pub struct Message {
     pub extra: Option<MessageExtra>,
 }
 
-#[derive(Debug, serde::Deserialize)]
+#[derive(Clone, Debug, serde::Deserialize)]
 pub struct MessageExtra {
     pub guild_id: Option<String>,
     pub member: Option<serde_json::Value>,

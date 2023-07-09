@@ -1,6 +1,7 @@
 use leptos::*;
 use leptos_router::*;
 
+use super::ListedChannel;
 use crate::{logic::Client, utils::collection_ext::CollectionExt};
 
 #[component]
@@ -35,13 +36,7 @@ pub fn ChannelBar(cx: Scope) -> impl IntoView {
                                     each=move || channels.clone()
                                     key=|channel| { channel.0 }
                                     view=|cx, channel| {
-                                        view! { cx,
-                                            <div class="channel">
-                                                <A href=format!("./{}", channel.0)>
-                                                    {channel.1.name.as_ref().cloned().unwrap_or_else(|| String::from("Unnamed channel"))}
-                                                </A>
-                                            </div>
-                                        }
+                                        view! { cx, <ListedChannel channel/> }
                                     }
                                 />
                             }

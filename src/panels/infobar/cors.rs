@@ -7,10 +7,7 @@ pub fn CorsRequirement(cx: Scope) -> impl IntoView {
     let condition = resource.read(cx).unwrap_or(true);
 
     view! { cx,
-        <Show
-            when=condition
-            fallback=|_| ()
-        >
+        <Show when=condition fallback=|_| ()>
             <div class="error">
                 <span class="iconify" data-icon="carbon:error"></span>
                 <span>"CORS is enabled"</span>
