@@ -17,9 +17,7 @@ jobs:
           targets: wasm32-unknown-unknown
       - uses: mbround18/trunk-rs@v0.0.1
       - name: Trunk Build
-        run: trunk build --release
-      - name: Fix links
-        run: sed -i -e 's+="/+="./+g' -e "s+'/+'./+g" ./dist/index.html
+        run: trunk build --release --public-url chaos
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
