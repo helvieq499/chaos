@@ -3,6 +3,14 @@ name = "chaos"
 version = "0.1.0"
 edition = "2021"
 
+[profile.release]
+opt-level = 'z'
+lto = true
+panic = "abort"
+
+[profile.dev]
+panic = "abort"
+
 [dependencies]
 comrak = "0.18"
 console_error_panic_hook = "0.1"
