@@ -13,8 +13,8 @@ mod app;
 use app::*;
 
 mod bindings;
+mod components;
 mod logic;
-mod panels;
 mod routes;
 mod utils;
 

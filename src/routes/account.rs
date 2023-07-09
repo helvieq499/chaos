@@ -1,7 +1,7 @@
 use leptos::*;
 use leptos_router::*;
 
-use crate::panels::{
+use crate::components::{
     account::{
         info::AccountInfo,
         login::{AccountLogin, AccountTokenLogin},

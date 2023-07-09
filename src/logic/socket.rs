@@ -1,6 +1,6 @@
 use super::discord::{Event, Payload};
+use crate::components::infobar::missing_intents::Enable as MissingIntentsWarning;
 use crate::logic::discord::{dispatch, gateway};
-use crate::panels::infobar::missing_intents::Enable as MissingIntentsWarning;
 use leptos::*;
 use std::rc::Rc;
 use wasm_sockets::{EventClient, Message};

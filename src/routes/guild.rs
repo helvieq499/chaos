@@ -1,7 +1,7 @@
 use leptos::*;
 use leptos_router::*;
 
-use crate::panels::{
+use crate::components::{
     channel::list::ChannelBar, guild::list::GuildListPanel, infobar::InfoBar,
     message::list::MessagePanel,
 };

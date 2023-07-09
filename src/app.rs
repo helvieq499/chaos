@@ -1,7 +1,7 @@
 use leptos::*;
 use leptos_router::*;
 
-use crate::panels::title_bar::TitleBar;
+use crate::components::title_bar::TitleBar;
 use crate::routes::{AccountRoutes, GuildRoutes};
 
 #[component]
