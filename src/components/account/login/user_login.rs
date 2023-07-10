@@ -57,6 +57,8 @@ pub fn UserLogin(cx: Scope) -> impl IntoView {
             <Captcha captcha_site_key set_captcha login_action/>
         </div>
     }
+    // TODO: MFA
+    // TODO: success/fail tile
 }
 
 async fn sign_in(
@@ -186,6 +188,7 @@ fn Captcha(
         login_action.dispatch(());
     };
 
+    // HACK: inline script to render hcaptcha
     view! { cx,
         <div>
             <Show when=move || captcha_site_key.get().is_some() fallback=|_| ()>

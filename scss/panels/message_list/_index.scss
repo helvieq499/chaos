@@ -2,7 +2,7 @@
     flex: 3;
     overflow-y: auto;
     scrollbar-width: thin;
-    padding-bottom: 28px; // TODO: this is a hack
+    padding-bottom: 28px; // HACK: magic number
 
     &>.message {
         background-color: #222;

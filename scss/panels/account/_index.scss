@@ -37,7 +37,7 @@
 }
 
 #user_login_grid {
-    height: calc(100% - 43px); // TODO: this is a hack
+    height: calc(100% - 43px); // HACK: magic number
     display: grid;
     grid-template-columns: 1fr 1fr;
 }
