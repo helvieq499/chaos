@@ -17,7 +17,7 @@ window.addEventListener("load", () => {
   if (document.location.host == "helvieq499.github.io") {
     // If you are not on the root (/chaos) then move to it
     if (document.location.pathname != "/chaos/") {
-      document.location = "https://helvieq499.github.io/chaos";
+      document.location = "https://helvieq499.github.io/chaos/";
     }
   }
 });
@@ -26,7 +26,7 @@ window.addEventListener("load", () => {
 
 // BUG: this is required or it breaks
 window.addEventListener("load", () => {
-  if (document.location.href == "https://helvieq499.github.io/chaos") {
+  if (document.location.href == "https://helvieq499.github.io/chaos/") {
     // Constant for Chaos to detect
     window.CHAOS_THROUGH_DISCORD_VERSION = 1;
 
@@ -90,7 +90,8 @@ window.addEventListener("load", () => {
 
     // Clear the page to put our message on it
     document.close();
-    document.write(`
+    try {
+      document.write(`
         <title>Chaos through Discord</title>
         <style>body { background-color: #35393e; color: white; }</style>
         <h1>Please keep this tab open.</h1>
@@ -98,7 +99,10 @@ window.addEventListener("load", () => {
         <h3>It will close when it is no longer needed</h3>
         <h4>This is required because Discord intentionally prevents iframes and cross-origin requests from working</h4>
       `);
-    document.close();
+      document.close();
+    } catch {
+      // TODO: Firefox prevents document.open, an alternative way to show the message is needed
+    }
 
     // Close this sub-tab (Discord) if the parent (Chaos) is closed
     setInterval(() => {
