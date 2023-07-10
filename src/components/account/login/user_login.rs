@@ -55,8 +55,6 @@ pub fn UserLogin(cx: Scope) -> impl IntoView {
         <div id="user_login_grid">
             <Credentials set_username set_password login_action/>
             <Captcha captcha_site_key set_captcha login_action/>
-            // TODO: MFA
-            // TODO: success/fail tile
         </div>
     }
 }
@@ -190,12 +188,8 @@ fn Captcha(
 
     view! { cx,
         <div>
-            <Show
-                when=move || captcha_site_key.get().is_some()
-                fallback=|_| ()
-            >
-                <div node_ref=captcha id="user_login_captcha"/>
-                // TODO: this is a hack
+            <Show when=move || captcha_site_key.get().is_some() fallback=|_| ()>
+                <div node_ref=captcha id="user_login_captcha"></div>
                 <script>"hcaptcha.render(user_login_captcha)"</script>
                 <button on:click=on_click>"Submit Captcha"</button>
             </Show>

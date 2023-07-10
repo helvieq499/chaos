@@ -1,5 +1,8 @@
 use leptos::*;
 
+mod ctd;
+pub use ctd::CTDCheck;
+
 mod connect;
 pub use connect::ConnectionCheck;
 
@@ -13,6 +16,7 @@ use missing_intents::MissingIntents;
 pub fn InfoBar(cx: Scope) -> impl IntoView {
     view! { cx,
         <div class="panel" id="info_bar">
+            <CTDCheck/>
             <LoginCheck/>
             <ConnectionCheck/>
             <MissingIntents/>

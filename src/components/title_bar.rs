@@ -12,10 +12,7 @@ pub fn TitleBar(cx: Scope) -> impl IntoView {
             );
 
             view! { cx,
-                <a
-                    href=url
-                    style="margin-left: auto"
-                >
+                <a href=url style="margin-left: auto">
                     <span>"Version "</span>
                     {crate::build_info::GIT_COMMIT_HASH_SHORT}
                 </a>

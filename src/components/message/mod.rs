@@ -65,7 +65,7 @@ pub fn ListedMessage(cx: Scope, message: Message) -> impl IntoView {
         <div class="message">
             <img class="pfp" src=pfp/>
             <span class="username">{username}</span>
-            <div inner_html=message_html/>
+            <div inner_html=message_html></div>
         </div>
     }
 }
