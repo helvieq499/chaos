@@ -26,7 +26,7 @@ window.addEventListener("load", () => {
 
 // BUG: this is required or it breaks
 window.addEventListener("load", () => {
-  if (document.location.host == "helvieq499.github.io") {
+  if (document.location.href == "https://helvieq499.github.io/chaos") {
     // Constant for Chaos to detect
     window.CHAOS_THROUGH_DISCORD_VERSION = 1;
 
