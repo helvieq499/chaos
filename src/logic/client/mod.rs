@@ -25,7 +25,7 @@ impl Client {
         Self {
             connect: create_rw_signal(cx, START_CONNECTED),
             sequence: RwLock::new(None),
-            credentials: create_rw_signal(cx, Credentials::from_local_storage()),
+            credentials: Credentials::new_signal_from_local_storage(cx),
 
             guilds: create_rw_signal(cx, RwLock::new(HashMap::new())),
 

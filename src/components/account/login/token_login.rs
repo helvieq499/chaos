@@ -15,16 +15,7 @@ pub fn AccountTokenLogin(cx: Scope) -> impl IntoView {
             is_bot: is_bot(),
             message_intent: message_intent(),
         };
-
-        if let Some(local_storage) = crate::utils::local_storage::get() {
-            local_storage
-                .set(
-                    "credentials",
-                    &serde_json::to_string(&creds).expect("parsed successfully"),
-                )
-                .expect("persisted");
-        }
-
+        
         credentials.set(Some(creds));
     };
 

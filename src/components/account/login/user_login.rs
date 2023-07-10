@@ -35,8 +35,8 @@ struct SignInFailureCaptcha {
 pub fn UserLogin(cx: Scope) -> impl IntoView {
     let client = Client::get(cx);
 
-    let (username, set_username) = create_signal(cx, "".to_string());
-    let (password, set_password) = create_signal(cx, "".to_string());
+    let (username, set_username) = create_signal(cx, String::new());
+    let (password, set_password) = create_signal(cx, String::new());
 
     let (captcha, set_captcha) = create_signal::<Option<String>>(cx, None);
     let (captcha_site_key, set_captcha_site_key) = create_signal::<Option<String>>(cx, None);
@@ -93,22 +93,23 @@ async fn sign_in(
                 log::error!("Failed to read response text");
                 return;
             }
-            let text = text.unwrap();
+            let text = text.expect("must be valid");
 
             match status {
-                200 => {
-                    if let Ok(success) = serde_json::from_str::<SignInSuccess>(&text) {
+                200 => serde_json::from_str::<SignInSuccess>(&text).map_or_else(
+                    |_| {
+                        log::error!("Failed to parse successful sign in response");
+                    },
+                    |success| {
                         client.credentials.update(|creds| {
                             *creds = Some(Credentials {
                                 token: success.token,
                                 is_bot: false,
                                 message_intent: false,
-                            })
-                        })
-                    } else {
-                        log::error!("Failed to parse successful sign in response");
-                    }
-                }
+                            });
+                        });
+                    },
+                ),
                 400 => {
                     if let Ok(failure) = serde_json::from_str::<SignInFailure>(&text) {
                         if let Some(code) = failure.code {
@@ -121,7 +122,7 @@ async fn sign_in(
                             match captcha.captcha_service.as_str() {
                                 "hcaptcha" => set_captcha_site_key(Some(captcha.captcha_sitekey)),
                                 unknown => {
-                                    log::error!("Unknown captcha provider \"{unknown}\" required")
+                                    log::error!("Unknown captcha provider \"{unknown}\" required");
                                 }
                             }
                         } else {
@@ -179,7 +180,7 @@ fn Captcha(
         if let Some(element) = captcha.get() {
             if let Some(child) = element.children().get_with_index(1) {
                 if let Some(value) = child.node_value() {
-                    set_captcha(Some(value))
+                    set_captcha(Some(value));
                 }
             }
         }
