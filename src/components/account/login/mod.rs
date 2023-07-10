@@ -4,6 +4,9 @@ use leptos_router::*;
 mod token_login;
 pub use token_login::AccountTokenLogin;
 
+mod user_login;
+pub use user_login::UserLogin;
+
 #[component]
 pub fn AccountLogin(cx: Scope) -> impl IntoView {
     view! { cx,
